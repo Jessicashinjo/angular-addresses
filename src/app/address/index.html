@@ -1,8 +1,14 @@
-<h1>I'm an address Book</h1>
+<h1>{{address.user}}'s address Book</h1>
 <a href="#/addresses/new" class="btn btn-primary">
   Add new address
 </a>
-<table class="table table-striped table-condensed">
+<p ng-show="address.loading">
+  Loading...
+</p>
+<table
+  class="table table-striped table-condensed"
+  ng-hide="address.loading"
+>
   <thead>
     <tr>
       <th>Name</th>
@@ -40,6 +46,7 @@
         <button
           class="btn btn-danger"
           ng-click="address.delete($index)"
+          ng-disabled="person.loading"
         >
           Delete
         </button>

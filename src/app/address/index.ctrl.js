@@ -1,30 +1,28 @@
 angular.module('app')
-  .controller('AddressCtrl', function (AddressFactory) {
+  .controller('AddressCtrl', function (AuthFactory, AddressFactory, $route) {
     const address = this
 
-    address.list = AddressFactory.all()
+    address.user = AuthFactory.getUser()
+    address.loading = true
 
-    // challenge mode
-    // AddressFactory.all().then(list =>
-    //   address.list = list
-    // )
+    AddressFactory.all()
+      .then(console.log)
+      .then(list => address.list = list)
+      .then(() => address.loading = false)
 
-    address.delete = (index) => {
+    // Arrow Function causes TypeError with ng-inspector
+    address.del = function (index) {
+      // buggy with delay and array index if multiple deletes execute
+      // should work better with proper database
+      address.list[index].loading = true
+
       AddressFactory.delete(index)
-
-      // grab list again
-      // address.list = AddressFactory.all()
-      // or
-      // edit in place
-      // address.list.splice(index, 1)
-      address.list = [
-        ...address.list.slice(0, index),
-        ...address.list.slice(index + 1)
-      ]
+        .then(() => (
+          address.list = [
+            ...address.list.slice(0, index),
+            ...address.list.slice(index + 1)
+          ]
+        ))
+        .catch($route.reload)
     }
-
-    // challenge
-    // address.delete = (index) => {
-    //   AddressFactory.delete(index).then(...)
-    // }
   })

@@ -3,16 +3,18 @@ angular.module('app')
     const address = this
     const id = $routeParams.id
 
-    address.person = AddressFactory.get(id)
+    address.heading = 'Edit Address'
+    address.loading = true
 
-    // challenge mode
-    // AddressFactory.get(index).then(...)
+    AddressFactory.get(id)
+      .then(person => address.person = person)
+      .then(() => address.loading = false)
+      .catch(() => $location.path('/addresses'))
 
     address.submit = () => {
       AddressFactory.update(id, address.person)
-      $location.path('/addresses')
-
-      // challenge mode
-      // AddressFactory.update(address.person).then(...)
+        .then(() => $location.path('/addresses'))
+        .then(() => address.loading = true)
+        .catch(() => $location.path('/addresses'))
     }
   })

@@ -1,5 +1,5 @@
 angular.module('app')
-  .factory('AddressFactory', () => {
+  .factory('AddressFactory', (delay) => {
     let list = [
       {
         name: 'Amy',
@@ -29,15 +29,45 @@ angular.module('app')
 
     return {
       all () {
-        return list
+        return delay(5000).then(() => (
+          list
+            ? Promise.resolve(list)
+            : Promise.reject('Missing address list')
+        ))
+
+        // return new Promise(resolve, reject) {
+        //   if (list) {
+        //     resolve(list)
+        //   }
+        //   reject('Missing address list')
+        // }
       },
 
       get (id) {
-        return list[id]
+        return delay(5000).then(() => (
+          list[id]
+            ? Promise.resolve(list[id])
+            : Promise.reject(`Address with id: ${id} not found`)
+        ))
       },
 
       create (person) {
-        list.push(person)
+        // With:
+        // Promise.resolve(list.push(person))
+        // Question: What does list.push(person) return?
+        // Answer: The list's new count
+        // Prefer: Promise.resolve(list.push(person)).then(() => list)
+
+        // What if list.push(person) errors? Does it reject?
+        //
+        // Prefer:
+        // return Promise.resolve()
+        //   .then(() => list.push(person))
+        //   .then(() => list)
+
+        return delay(5000)
+          .then(() => list.push(person))
+          .then(() => list)
       },
 
       update (index, person) {
@@ -45,18 +75,22 @@ angular.module('app')
         // thus: string + 1 === `${string}1`
         // prefer unary plus operator: +string + 1 === Number(string) + 1
 
-        list = [
-          ...list.slice(0, index),
-          person,
-          ...list.slice(+index + 1),
-        ]
+        return delay(5000).then(() => (
+          list = [
+            ...list.slice(0, index),
+            person,
+            ...list.slice(+index + 1),
+          ]
+        ))
       },
 
       delete (index) {
-        list = [
-          ...list.slice(0, index),
-          ...list.slice(index + 1),
-        ]
+        return delay(5000).then(() => (
+          list = [
+            ...list.slice(0, index),
+            ...list.slice(index + 1),
+          ]
+        ))
       }
     }
   })
