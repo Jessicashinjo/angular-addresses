@@ -2,12 +2,12 @@ angular.module('app')
   .controller('AddressCtrl', function (AddressFactory) {
     const address = this
 
-    address.list = AddressFactory.all()
+    // address.list = AddressFactory.all()
 
     // challenge mode
-    // AddressFactory.all().then(list =>
-    //   address.list = list
-    // )
+    AddressFactory.all().then(list =>
+      address.list = list
+    )
 
     address.delete = (index) => {
       AddressFactory.delete(index)

@@ -1,5 +1,5 @@
 angular.module('app')
-  .factory('AddressFactory', () => {
+  .factory('AddressFactory', ($timeout) => {
     let list = [
       {
         name: 'Amy',
@@ -29,11 +29,13 @@ angular.module('app')
 
     return {
       all () {
-        return list
+        // timeout = 1000 means callback after 1 second
+        return $timeout(()=>{}, 1000).then(() => list)
       },
 
       get (id) {
-        return list[id]
+        // timeout = 0 means callback ASAP but still async
+        return $timeout().then(() => list[id])
       },
 
       create (person) {
