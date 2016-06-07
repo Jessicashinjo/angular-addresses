@@ -1,4 +1,6 @@
-<h1>I'm an address Book</h1>
+<h1 ng-show="address.user">I'm {{address.user}}'s address Book</h1>
+<h1 ng-hide="address.user">I'm an address Book</h1>
+
 <a href="#/addresses/new" class="btn btn-primary">
   Add new address
 </a>

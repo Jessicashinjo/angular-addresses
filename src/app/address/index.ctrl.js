@@ -1,6 +1,8 @@
 angular.module('app')
-  .controller('AddressCtrl', function (AddressFactory) {
+  .controller('AddressCtrl', function (AuthFactory, AddressFactory) {
     const address = this
+
+    address.user = AuthFactory.getUser()
 
     // address.list = AddressFactory.all()
 
